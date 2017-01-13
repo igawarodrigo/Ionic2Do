@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {Task} from './task';
 import { NavController, ItemSliding } from 'ionic-angular';
 import { AngularFire, FirebaseListObservable } from 'angularfire2';
+import {Dialogs} from 'ionic-native';
 
 @Component({
   selector: 'page-home',
@@ -21,10 +22,14 @@ export class TaskListPage {
   }
 
   addItem() {
-    let theNewTask: string = prompt("New Task");
-    if (theNewTask !== '') {
-      this.tasks.push({ title: theNewTask, status: 'open' });
-    }
+    Dialogs.prompt('Add a task', 'Ionic2Do', ['Ok', 'Cancel'], '')
+      .then(
+        theResult => {
+          if (theResult.buttonIndex == 1 && theResult.input1 != '') {
+            this.tasks.push({ title: theResult.input1, status: 'open' });
+          }
+        }
+      )
   }
 
   markAsDone(slidingItem: ItemSliding,task: Task) {
